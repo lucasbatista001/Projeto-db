@@ -1,9 +1,39 @@
-import { Html } from "@elysiajs/html";
+import { Html, html } from "@elysiajs/html";
 import { Elysia, t } from "elysia";
+import { Home } from "./components/home";
+import { Post } from "./components/post";
 import { db } from "./db";
+import { formatDate } from "./utils/formatDate";
 
 const app = new Elysia()
+  .use(html())
   .decorate("db", db)
+  .decorate("formatDate", formatDate)
+  .get("/", async ({ db, formatDate }) => {
+    const { rows } = await db.query<{
+      id: number;
+      title: string;
+      content: string;
+      created_at: Date;
+    }>(`SELECT * FROM posts`);
+    return (
+      <Home>
+        <div
+          class={
+            "w-2/4 h-1/2 flex flex-col items-center justify-start overflow-auto"
+          }
+        >
+          {rows.map((post) => (
+            <Post
+              content={post.content}
+              title={post.title}
+              createdAt={formatDate(post.created_at)}
+            ></Post>
+          ))}
+        </div>
+      </Home>
+    );
+  })
   .post(
     "/posts",
     async ({ db, body, error, set }) => {
