@@ -1,23 +1,49 @@
-export const Home = ({ children }: { children: JSX.Element }) => (
-  <html lang="pt-br">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Posts CRUD</title>
-      <script src="https://cdn.tailwindcss.com"></script>
-      <link
-        rel="stylesheet"
-        href="https://cdn-uicons.flaticon.com/2.3.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
-      ></link>
-      <link
-        rel="stylesheet"
-        href="https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-rounded/css/uicons-solid-rounded.css"
-      ></link>
-    </head>
-    <body class={"h-screen bg-zinc-900"}>
-      <div id={"main"} class={"w-full h-full flex items-center justify-center"}>
+export const Home = ({ children }: { children: JSX.Element[] }) => {
+  return (
+    <div class={"flex flex-col justify-center items-center gap-4 w-2/4 h-3/4"}>
+      <div
+        id={"posts"}
+        class={
+          "h-full w-full flex flex-col items-center justify-start gap-2  p-2 overflow-auto"
+        }
+      >
         {children}
       </div>
-    </body>
-  </html>
-);
+      <form
+        hx-post="/posts"
+        hx-trigger="submit"
+        hx-target="#posts"
+        hx-swap="beforeend"
+        class={"flex flex-col justify-center items-center gap-2 w-1/2"}
+      >
+        <div class={"w-full flex flex-col "}>
+          <label for="title" class={"text-white"}>
+            Título:
+          </label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            max={255}
+            placeholder="Título do post"
+            class={"rounded p-1"}
+          />
+        </div>
+        <div class={"w-full flex flex-col rounded"}>
+          <label for="content" class={"text-white"}>
+            Conteúdo:
+          </label>
+          <textarea name="content" id="content" class={"rounded p-1"} />
+        </div>
+        <button
+          type="submit"
+          class={
+            "flex p-2 w-fit bg-green-500 text-center rounded hover:opacity-[0.8]"
+          }
+        >
+          Enviar
+        </button>
+      </form>
+    </div>
+  );
+};

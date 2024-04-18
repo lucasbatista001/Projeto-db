@@ -1,5 +1,6 @@
 import { Html, html } from "@elysiajs/html";
 import { Elysia, t } from "elysia";
+import { Base } from "./components/base";
 import { Home } from "./components/home";
 import { Post } from "./components/post";
 import { db } from "./db";
@@ -17,12 +18,8 @@ const app = new Elysia()
       created_at: Date;
     }>(`SELECT * FROM posts`);
     return (
-      <Home>
-        <div
-          class={
-            "w-2/4 h-1/2 flex flex-col items-center justify-start overflow-auto"
-          }
-        >
+      <Base>
+        <Home>
           {rows.map((post) => (
             <Post
               content={post.content}
@@ -30,22 +27,35 @@ const app = new Elysia()
               createdAt={formatDate(post.created_at)}
             ></Post>
           ))}
-        </div>
-      </Home>
+        </Home>
+      </Base>
     );
   })
   .post(
     "/posts",
-    async ({ db, body, error, set }) => {
+    async ({ db, body, error, formatDate }) => {
       try {
-        const result = await db.query(
+        await db.query(
           `INSERT INTO posts (title, content) 
           VALUES ($1, $2)`,
           [body.title, body.content]
         );
+        const { rows } = await db.query<{
+          id: number;
+          title: string;
+          content: string;
+          created_at: Date;
+        }>(`SELECT * FROM posts ORDER BY id DESC LIMIT 1`);
 
-        console.log(result.rows);
-        set.redirect = "/posts/1";
+        const { created_at, content, title } = rows[0];
+
+        return (
+          <Post
+            content={content}
+            createdAt={formatDate(created_at)}
+            title={title}
+          ></Post>
+        );
       } catch (e) {
         console.error(e);
         return error(500, "Internal Server Error");
