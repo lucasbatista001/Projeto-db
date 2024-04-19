@@ -22,7 +22,7 @@ export const PostForm = ({ id, title, content }: PostSchema) => (
           name="title"
           id="title"
           value={title}
-          class={"rounded border-2 h-full w-full"}
+          class={"rounded border-2"}
         />
       </div>
       <div class={"w-full flex flex-col gap-2 "}>
@@ -39,13 +39,7 @@ export const PostForm = ({ id, title, content }: PostSchema) => (
       </div>
     </form>
     <div class={"flex flex-col justify-center pl-4 items-center gap-4"}>
-      <i
-        hx-trigger="click"
-        hx-target={`#post${id}`}
-        hx-swap="outerHTML"
-        hx-patch={`/posts/${id}`}
-        class="fi fi-sr-check-circle flex justify-center items-center rounded bg-green-500 p-2 hover:cursor-pointer"
-      ></i>
+      <i class="fi fi-sr-check-circle flex justify-center items-center rounded bg-green-500 p-2 hover:cursor-pointer"></i>
       <i class="fi fi-br-cross flex justify-center items-center rounded bg-red-400 p-2 hover:cursor-pointer"></i>
     </div>
   </div>
