@@ -1,13 +1,16 @@
 export const Post = ({
+  id,
   title,
   content,
   createdAt,
 }: {
+  id: number;
   title: string;
   content: string;
   createdAt: string;
 }) => (
   <div
+    id={`post${id}`}
     class={
       "flex flex-row items-center justify-between p-4 w-full rounded shadow bg-zinc-50 divide-x divide-zinc-500"
     }
@@ -19,8 +22,16 @@ export const Post = ({
       </div>
       <p class={"italic"}>{content}</p>
     </div>
-    <div class={"flex flex-col justify-center pl-4 items-center gap-4"}>
-      <i class="fi fi-sr-pen-clip flex justify-center items-center rounded bg-sky-500 p-2 hover:cursor-pointer"></i>
+    <div
+      class={"flex flex-col justify-center pl-4 items-center gap-4"}
+      hx-trigger="submit"
+    >
+      <i
+        hx-target={`#post${id}`}
+        hx-get={`/edit/${id}`}
+        hx-swap="outerHTML"
+        class="fi fi-sr-pen-clip flex justify-center items-center rounded bg-sky-500 p-2 hover:cursor-pointer"
+      ></i>
       <i class="fi fi-br-cross flex justify-center items-center rounded bg-red-400 p-2 hover:cursor-pointer"></i>
     </div>
   </div>

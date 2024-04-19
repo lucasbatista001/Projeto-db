@@ -16,7 +16,7 @@ export const Home = ({ children }: { children: JSX.Element[] }) => {
         hx-swap="beforeend"
         class={"flex flex-col justify-center items-center gap-2 w-1/2"}
       >
-        <div class={"w-full flex flex-col "}>
+        <div class={"w-full flex flex-col"}>
           <label for="title" class={"text-white"}>
             Título:
           </label>

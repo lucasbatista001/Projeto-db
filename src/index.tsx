@@ -3,7 +3,9 @@ import { Elysia, t } from "elysia";
 import { Base } from "./components/base";
 import { Home } from "./components/home";
 import { Post } from "./components/post";
+import { PostForm } from "./components/post-form";
 import { db } from "./db";
+import { PostSchema } from "./types/post";
 import { formatDate } from "./utils/formatDate";
 
 const app = new Elysia()
@@ -11,17 +13,13 @@ const app = new Elysia()
   .decorate("db", db)
   .decorate("formatDate", formatDate)
   .get("/", async ({ db, formatDate }) => {
-    const { rows } = await db.query<{
-      id: number;
-      title: string;
-      content: string;
-      created_at: Date;
-    }>(`SELECT * FROM posts`);
+    const { rows } = await db.query<PostSchema>(`SELECT * FROM posts`);
     return (
       <Base>
         <Home>
           {rows.map((post) => (
             <Post
+              id={post.id}
               content={post.content}
               title={post.title}
               createdAt={formatDate(post.created_at)}
@@ -30,6 +28,20 @@ const app = new Elysia()
         </Home>
       </Base>
     );
+  })
+  .get("/edit/:id", async ({ db, params, error }) => {
+    try {
+      const { rows } = await db.query<PostSchema>(
+        `SELECT * FROM posts WHERE id = $1`,
+        [params.id]
+      );
+      const post = rows[0];
+
+      return <PostForm {...post} />;
+    } catch (e) {
+      console.error(e);
+      return error(500, "Internal Server Error");
+    }
   })
   .post(
     "/posts",
@@ -40,17 +52,15 @@ const app = new Elysia()
           VALUES ($1, $2)`,
           [body.title, body.content]
         );
-        const { rows } = await db.query<{
-          id: number;
-          title: string;
-          content: string;
-          created_at: Date;
-        }>(`SELECT * FROM posts ORDER BY id DESC LIMIT 1`);
+        const { rows } = await db.query<PostSchema>(
+          `SELECT * FROM posts ORDER BY id DESC LIMIT 1`
+        );
 
-        const { created_at, content, title } = rows[0];
+        const { id, created_at, content, title } = rows[0];
 
         return (
           <Post
+            id={id}
             content={content}
             createdAt={formatDate(created_at)}
             title={title}
