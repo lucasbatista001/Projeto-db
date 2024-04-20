@@ -3,4 +3,5 @@ export type PostSchema = {
   title: string;
   content: string;
   created_at: Date;
+  comments: CommentSchema[];
 };

@@ -8,9 +8,10 @@ export const PostForm = ({ id, title, content }: PostSchema) => (
     }
   >
     <form
-      hx-trigger="submit"
+      hx-trigger={`click from:#updatePost${id}`}
       hx-patch={`/posts/${id}`}
-      hx-target={`#${id}`}
+      hx-target={`#post${id}`}
+      hx-swap="outerHTML"
       class={"flex flex-row w-4/5 justify-between gap-8"}
     >
       <div class="w-full flex flex-col gap-2 ">
@@ -39,8 +40,16 @@ export const PostForm = ({ id, title, content }: PostSchema) => (
       </div>
     </form>
     <div class={"flex flex-col justify-center pl-4 items-center gap-4"}>
-      <i class="fi fi-sr-check-circle flex justify-center items-center rounded bg-green-500 p-2 hover:cursor-pointer"></i>
-      <i class="fi fi-br-cross flex justify-center items-center rounded bg-red-400 p-2 hover:cursor-pointer"></i>
+      <i
+        id={`updatePost${id}`}
+        class="fi fi-sr-check-circle flex justify-center items-center rounded bg-green-500 p-2 hover:cursor-pointer"
+      ></i>
+      <i
+        hx-delete={`/posts/${id}`}
+        hx-target={`#post${id}`}
+        hx-swap="outerHTML"
+        class="fi fi-br-cross flex justify-center items-center rounded bg-red-400 p-2 hover:cursor-pointer"
+      ></i>
     </div>
   </div>
 );
