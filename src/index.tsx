@@ -16,7 +16,9 @@ const app = new Elysia()
   .decorate("db", db)
   .decorate("formatDate", formatDate)
   .get("/", async ({ db, formatDate }) => {
-    const { rows } = await db.query<PostSchema>(`SELECT * FROM posts`);
+    // TODO - Essa query deve retornar todas as colunas de todos os registros da tabela posts
+    const query: string = 'SELECT * FROM posts'
+    const { rows } = await db.query<PostSchema>(query);
     return (
       <Base>
         <Home>
@@ -33,11 +35,10 @@ const app = new Elysia()
     );
   })
   .get("/edit/:id", async ({ db, params, error }) => {
+    // TODO - Essa query deve retornar todas as colunas do registro da tabela posts onde o id é igual ao id passado como parâmetro
+    const query: string = 'SELECT * FROM posts WHERE id = $1'
     try {
-      const { rows } = await db.query<PostSchema>(
-        `SELECT * FROM posts WHERE id = $1`,
-        [params.id]
-      );
+      const { rows } = await db.query<PostSchema>(query, [params.id]);
       const post = rows[0];
 
       return <PostForm {...post} />;
@@ -49,15 +50,14 @@ const app = new Elysia()
   .post(
     "/posts",
     async ({ db, body, error, formatDate }) => {
+      // TODO - Essa query deve inserir um novo registro na tabela posts,
+      //  atribuindo os valores passados no corpo da requisição para as colunas title e content
+      const insertQuery: string = 'INSERT INTO posts (title, content) VALUES ($1, $2)'
+      // TODO - Essa query deve retornar todas as colunas do último registro da tabela posts
+      const selectQuery: string = 'SELECT * FROM posts ORDER BY id DESC LIMIT 1'
       try {
-        await db.query(
-          `INSERT INTO posts (title, content) 
-          VALUES ($1, $2)`,
-          [body.title, body.content]
-        );
-        const { rows } = await db.query<PostSchema>(
-          `SELECT * FROM posts ORDER BY id DESC LIMIT 1`
-        );
+        await db.query(insertQuery, [body.title, body.content]);
+        const { rows } = await db.query<PostSchema>(selectQuery);
 
         const { id, created_at, content, title } = rows[0];
 
