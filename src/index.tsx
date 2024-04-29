@@ -1,4 +1,5 @@
 import { Html, html } from "@elysiajs/html";
+import * as dotenv from "dotenv";
 import { Elysia, t } from "elysia";
 import { Base } from "./components/base";
 import { Comment } from "./components/comment";
@@ -10,6 +11,8 @@ import { db } from "./db";
 import { CommentSchema } from "./types/comment";
 import { PostSchema } from "./types/post";
 import { formatDate } from "./utils/formatDate";
+
+dotenv.config();
 
 const app = new Elysia()
   .use(html())
