@@ -26,7 +26,7 @@ bun install
 
 ## Inicie o servidor de desenvolvimento
 ```bash
-bun run dev
+bun dev
 ```
 
 **Abra http://localhost:3000/ com o navegador para testar a aplicação.**
