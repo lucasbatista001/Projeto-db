@@ -14,7 +14,7 @@ export const Comment = ({
   >
     <span>{content}</span>
     <div class="flex items-center gap-4">
-      <span>{formatDate(created_at)}</span>
+      <span class={"p-8"}>{formatDate(created_at)}</span>
       <i
         hx-delete={`/comments/${id}`}
         hx-target={`#comment${id}`}
