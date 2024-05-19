@@ -8,6 +8,7 @@
   "dependencies": {
     "@elysiajs/html": "^1.0.2",
     "@types/pg": "^8.11.5",
+    "@types/react-router-dom": "^5.3.3",
     "dotenv": "^16.4.5",
     "elysia": "latest",
     "pg": "^8.11.5"
